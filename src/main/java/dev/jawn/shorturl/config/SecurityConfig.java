@@ -17,6 +17,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/hello").permitAll()
+                // curl -u dev:devpwd http://localhost:8080/securehello
+                .requestMatchers("/securehello").authenticated()
                 .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults());
