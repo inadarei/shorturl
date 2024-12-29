@@ -1,0 +1,27 @@
+# Content for 001-initial-schema.yaml
+databaseChangeLog:
+  - changeSet:
+      id: "1"
+      author: dev
+      changes:
+        - createTable:
+            tableName: url-map
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: longurl
+                  type: VARCHAR(2048)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shorturl
+                  type: VARCHAR(2048)
+                  constraints:
+                    nullable: false
+                    unique: true

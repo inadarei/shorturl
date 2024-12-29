@@ -1,0 +1,23 @@
+# Use the official PostgreSQL image as the base image
+FROM postgres:latest
+
+# Set environment variables for PostgreSQL
+ENV POSTGRES_USER=dev
+ENV POSTGRES_PASSWORD=devpwd
+ENV POSTGRES_DB=devdb
+
+# Expose PostgreSQL default port
+EXPOSE 5432
+
+# Create a directory for custom initialization scripts
+RUN mkdir -p /docker-entrypoint-initdb.d
+
+# Copy custom initialization scripts (if needed)
+# COPY ./init.sql /docker-entrypoint-initdb.d/
+
+# Set the default command to run PostgreSQL
+CMD ["postgres"]
+
+# Optional: Add health check
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD pg_isready -U dev -d devdb || exit 1
