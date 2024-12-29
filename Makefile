@@ -1,6 +1,6 @@
-.PHONY: help start-app start-db stop stop-app stop-db restart clean logs ps default
+.PHONY: help start-app start-db start-zipkin test stop stop-app stop-db stop-zipkin restart clean logs ps default
 
-default: start-db start-app
+default: start-db start-zipkin start-app
 
 help:
 	@echo "Available commands:"
@@ -26,7 +26,12 @@ start-db:
 	@echo "  Password: devpwd"
 	@echo "  Database: devdb"
 
-stop: stop-db stop-app
+start-zipkin:
+	@echo "Starting Zipkin container..."
+	@docker-compose -f docker-compose-zipkin.yml up -d
+	@echo "Zipkin is running on localhost:9411"
+
+stop: stop-app stop-db stop-zipkin
 
 stop-app:
 	@echo "Stopping the application..."
@@ -36,7 +41,15 @@ stop-db:
 	@echo "Stopping PostgreSQL container..."
 	@docker-compose -f docker-compose-postgres.yml down
 
+stop-zipkin:
+	@echo "Stopping Zipkin container..."
+	@docker-compose -f docker-compose-zipkin.yml down
+
 restart: stop start
+
+test: start-db
+	@echo "Running tests..."
+	@mvn test
 
 clean:
 	@echo "Cleaning up PostgreSQL container, network, and volume..."

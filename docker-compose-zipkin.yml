@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
+    networks:
+      - shorturl-network
+
+networks:
+  shorturl-network:
+    driver: bridge
