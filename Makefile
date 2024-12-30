@@ -1,16 +1,22 @@
-.PHONY: help start-app start-db start-zipkin test stop stop-app stop-db stop-zipkin restart clean logs ps default
+.PHONY: help build start-app start-db start-zipkin test stop stop-app stop-db stop-zipkin restart clean logs ps default
 
 default: start-db start-zipkin start-app
 
 help:
 	@echo "Available commands:"
-	@echo "  make          : Start the PostgreSQL container (same as 'make start')"
-	@echo "  make start    : Start the PostgreSQL container"
-	@echo "  make stop     : Stop the PostgreSQL container"
-	@echo "  make restart  : Restart the PostgreSQL container"
-	@echo "  make clean    : Stop and remove container, network, and volume"
-	@echo "  make logs     : Show container logs"
-	@echo "  make ps       : Show container status"
+	@echo "  make           		: Start application with PostgreSQL and Zipkin running in Docker"
+	@echo "  make build     		: Build the application"
+	@echo "  make start-app  		: Re/Start the app only"
+	@echo "  make stop      		: Stop application, PostgreSQL, and Zipkin"
+	@echo "  make restart   		: Restart the application, PostgreSQL, and Zipkin"
+	@echo "  make clean     		: Stop and remove container, network, and volume"
+	@echo "  make logs      		: Show database container logs"
+	@echo "  make ps        		: Show database container status"
+
+
+build: 
+	@echo "Building the application..."
+	@mvn package
 
 start-app: 
 	@echo "Re/Starting the application..."
@@ -53,7 +59,9 @@ test: start-db
 
 clean:
 	@echo "Cleaning up PostgreSQL container, network, and volume..."
+	@mvn clean install -U
 	@docker-compose -f docker-compose-postgres.yml down -v
+	@docker-compose -f docker-compose-zipkin.yml down -v
 
 logs:
 	@docker-compose -f docker-compose-postgres.yml logs -f

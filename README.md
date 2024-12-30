@@ -14,3 +14,17 @@ To run the project, you can use the included Makefile. The following commands ar
 - `make` - This will start the project in development mode
 - `make logs` - This will show logs of the Docker container that runs postgres DB
 - `make test` - This will run the tests
+
+## Authentication
+
+Get token: 
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"username":"dev","password":"devpwd"}' http://localhost:8080/auth/token
+```
+
+Use token: 
+
+```
+curl -H "Authorization: Bearer <token>" http://localhost:8080/securehello
+```
