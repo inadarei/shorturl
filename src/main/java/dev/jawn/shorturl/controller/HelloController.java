@@ -1,4 +1,4 @@
-package dev.jawn.shorturl;
+package dev.jawn.shorturl.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
