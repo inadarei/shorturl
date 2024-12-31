@@ -1,6 +1,6 @@
 package dev.jawn.shorturl.security;
 
-import org.springframework.context.annotation.Bean;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

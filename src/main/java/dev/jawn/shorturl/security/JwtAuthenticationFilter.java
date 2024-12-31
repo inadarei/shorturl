@@ -1,5 +1,6 @@
 package dev.jawn.shorturl.security;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Log4j2
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -28,9 +30,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain chain)
             throws ServletException, IOException {
         
+        log.info ("Do filtering...");        
         final String authHeader = request.getHeader("Authorization");
 
+        log.info ("Auth Header: " + authHeader);
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn ("No authorization header detected!");
             chain.doFilter(request, response);
             return;
         }
@@ -51,6 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                log.warn("Invalid token: " + jwt);
             }
         }
         chain.doFilter(request, response);

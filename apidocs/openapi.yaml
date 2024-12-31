@@ -49,7 +49,7 @@ paths:
                   example: "npr-best-books-2024"
                   pattern: "^[a-zA-Z0-9-_]+$"
                   minLength: 3
-                  maxLength: 50
+                  maxLength: 250
       responses:
         '201':
           description: Short URL created successfully
