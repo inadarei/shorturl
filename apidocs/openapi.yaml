@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener API
+  description: API for creating short URLs from long URLs
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+# Add security schemes
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+# Add global security requirement
+security:
+  - bearerAuth: []
+
+servers:
+  - url: https://127.0.0.1:8080
+    description: Dev Server
+
+paths:
+  /shortlinks:
+    post:
+      summary: Create a new short URL
+      description: Creates a new short URL mapping from a long URL and optional custom alias
+      operationId: createShortlink
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - long-url
+              properties:
+                long-url:
+                  type: string
+                  format: uri
+                  description: The original long URL to be shortened
+                  example: "https://apps.npr.org/best-books/#view=covers&year=2024"
+                short-alias:
+                  type: string
+                  description: Optional custom alias for the short URL
+                  example: "npr-best-books-2024"
+                  pattern: "^[a-zA-Z0-9-_]+$"
+                  minLength: 3
+                  maxLength: 50
+      responses:
+        '201':
+          description: Short URL created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  short-url:
+                    type: string
+                    format: uri
+                    description: The generated short URL
+                    example: "https://ex.go/npr-best-books-2024"
+                  long-url:
+                    type: string
+                    format: uri
+                    description: The original long URL
+                    example: "https://apps.npr.org/best-books/#view=covers&year=2024"
+                  created-at:
+                    type: string
+                    format: date-time
+                    description: Timestamp of when the short URL was created
+                    example: "2024-12-30T12:00:00Z"
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message describing the validation failure
+                    example: "Invalid URL format"
+                  code:
+                    type: string
+                    description: Error code
+                    example: "INVALID_URL"
+        '409':
+          description: Short alias already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: "Short alias already in use"
+                  code:
+                    type: string
+                    description: Error code
+                    example: "ALIAS_EXISTS"

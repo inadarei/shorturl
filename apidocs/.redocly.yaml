@@ -1,0 +1,9 @@
+extends:
+  - recommended
+
+rules:
+  tags-alphabetical: off
+
+apis:
+  main:
+    root: ./openapi.yaml
