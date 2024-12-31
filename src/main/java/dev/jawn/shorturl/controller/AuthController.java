@@ -39,7 +39,9 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
         String token = jwtUtil.generateToken(request.username());
+        log.info("Token generated: " + token);
         String expires_in = environment.getProperty("dev.jawn.shorturl.jwt.token-lifetime");
+        log.info("Expires in: " + expires_in);
         return new ResponseEntity<>(new AuthResponse(token, 
                                                   "Bearer", 
                                                   expires_in,
@@ -48,3 +50,12 @@ public class AuthController {
                                                   
     }
 }
+
+@SuppressWarnings("unused")
+record AuthRequest(String username, String password) {}
+
+@SuppressWarnings("unused")
+record AuthResponse(String access_token, 
+                  String token_type,
+                  String expires_in,
+                  String scope) {}
