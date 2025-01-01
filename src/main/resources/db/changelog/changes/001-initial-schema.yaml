@@ -5,23 +5,29 @@ databaseChangeLog:
       author: dev
       changes:
         - createTable:
-            tableName: url-map
+            tableName: shortlinks
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: BIGSERIAL
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: longurl
+                  name: long_url
                   type: VARCHAR(2048)
                   constraints:
                     nullable: false
               - column:
-                  name: shorturl
-                  type: VARCHAR(2048)
+                  name: short_alias
+                  type: VARCHAR(250)
                   constraints:
                     nullable: false
                     unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
