@@ -1,11 +1,15 @@
 package dev.jawn.shorturl.controller;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.jawn.shorturl.service.ShortlinkService;
+import dev.jawn.shorturl.exception.DuplicateShortlinkException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +40,13 @@ class CreationController {
                                                           request.shortAlias(), 
                                                           Instant.now().toString()), 
                                                     HttpStatus.CREATED);
+    }
+
+    @ExceptionHandler(DuplicateShortlinkException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateShortlinkException(DuplicateShortlinkException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.CONFLICT);
     }
 }
 
