@@ -1,4 +1,4 @@
-.PHONY: help build start-app start-db start-zipkin test stop stop-app stop-db stop-zipkin restart clean logs ps default
+.PHONY: help build start-app start-db start-zipkin test test-cucumber stop stop-app stop-db stop-zipkin restart clean logs ps default
 
 default: start-db start-zipkin start-app
 
@@ -53,9 +53,20 @@ stop-zipkin:
 
 restart: stop start
 
-test: start-db
-	@echo "Running tests..."
+test: 
+	@echo "Running all tests..."
+#	@mvn clean 
+#	@stop-db && start-db 
+#	@stop-zipkin && start-zipkin 
 	@mvn test
+
+test-cucumber: start-db start-zipkin
+	@echo "Running components tests only..."
+	@mvn test -Dtest=CucumberIntegrationTest
+# Run with specific cucumber tags
+# @mvn test -Dcucumber.filter.tags="@smoke"	
+
+
 
 clean:
 	@echo "Cleaning up PostgreSQL container, network, and volume..."
